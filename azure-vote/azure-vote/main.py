@@ -4,6 +4,16 @@ import random
 import redis
 import socket
 import sys
+import pyodbc 
+# Some other example server values are
+# server = 'localhost\sqlexpress' # for a named instance
+# server = 'myserver,port' # to specify an alternate port
+server = 'tcp:serverrushil.database.windows.net' 
+database = 'try' 
+username = 'rushil' 
+password = 'Rgoomer88' 
+cnxn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+cursor = cnxn.cursor()
 
 app = Flask(__name__)
 
@@ -69,6 +79,8 @@ def index():
             r.set(button2,0)
             vote1 = r.get(button1).decode('utf-8')
             vote2 = r.get(button2).decode('utf-8')
+            cursor.execute("INSERT INTO [dbo].[voting] (vote1,vot2) VALUES ('1','1');")
+            cnxn.commit()
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
         
         else:
